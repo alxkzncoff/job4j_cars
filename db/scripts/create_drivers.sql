@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS drivers(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    phone VARCHAR(50)
+);

@@ -13,6 +13,9 @@
         <property name="hibernate.jdbc.time_zone">Europe/Moscow</property>
 
         <property name="hbm2ddl.auto">create</property>
-        <!-- List of XML mapping files -->
+
+        <mapping class="ru.job4j.cars.model.Car" />
+        <mapping class="ru.job4j.cars.model.Engine" />
+        <mapping class="ru.job4j.cars.model.Driver" />
     </session-factory>
 </hibernate-configuration>
