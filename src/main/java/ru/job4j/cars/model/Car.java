@@ -1,12 +1,13 @@
 package ru.job4j.cars.model;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 /**
- * Класс описывающий автомобиль.
+ * Класс автомобиль.
  * @author Aleksandr Kuznetsov.
  * @version 1.0
  */
@@ -20,6 +21,7 @@ public class Car {
     private String name;
     private String description;
     private Float body;
+    private Boolean sold = false;
 
     @ManyToOne
     @JoinColumn(name = "engine_id")
@@ -32,13 +34,21 @@ public class Car {
             @JoinColumn(name = "car_id", nullable = false, updatable = false)})
     private Set<Driver> drivers = new HashSet<>();
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created = new Date(System.currentTimeMillis());
     private byte[] photo;
 
-    public Car of(String name, String description, Float body) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Car of(String name, String description, Float body, Engine engine, User user) {
         Car car = new Car();
         car.name = name;
         car.description = description;
         car.body = body;
+        car.engine = engine;
+        car.user = user;
         return car;
     }
 
@@ -81,6 +91,47 @@ public class Car {
     public void setPhoto(byte[] photo) {
         this.photo = photo;
     }
+
+    public Boolean getSold() {
+        return sold;
+    }
+
+    public void setSold(Boolean sold) {
+        this.sold = sold;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
+    public Set<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(Set<Driver> drivers) {
+        this.drivers = drivers;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
     @Override
     public String toString() {

@@ -1,8 +1,12 @@
 CREATE TABLE IF NOT EXISTS cars(
     id SERIAL PRIMARY KEY,
-    name varchar(255),
+    name VARCHAR(255),
     description TEXT,
-    body varchar(50),
+    body VARCHAR(50),
     photo BYTEA,
-    engine_id INT NOT NULL REFERENCES engines(id)
+    sold BOOLEAN,
+    created TIMESTAMP,
+    engine_id INT NOT NULL REFERENCES engines(id),
+    user_id INT NOT NULL REFERENCES users(id)
+
 );

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * Класс описывающий двигатель автомобиля.
+ * Класс двигателя автомобиля.
  * @author Alkeksandr Kuznetsov.
  * @version 1.0
  */

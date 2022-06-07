@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * Класс описывающий владельца автомобиля.
+ * Класс владелец автомобиля.
  * @author Alkesandr Kuznetsov.
  * @version 1.0
  */
