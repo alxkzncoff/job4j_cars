@@ -1,6 +1,7 @@
 package ru.job4j.cars.model;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -19,6 +20,8 @@ public class User {
     private String phone;
     private String email;
     private String password;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created = new Date(System.currentTimeMillis());
 
     public User of(String name, String phone, String email, String password) {
         User user = new User();

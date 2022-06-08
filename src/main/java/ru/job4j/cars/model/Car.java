@@ -1,7 +1,6 @@
 package ru.job4j.cars.model;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -21,34 +20,26 @@ public class Car {
     private String name;
     private String description;
     private Float body;
-    private Boolean sold = false;
 
     @ManyToOne
-    @JoinColumn(name = "engine_id")
+    @JoinColumn(name = "engine_id", foreignKey = @ForeignKey(name = "ENGINE_ID_FK"))
     private Engine engine;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "history_owners", joinColumns = {
-            @JoinColumn(name = "driver_id", nullable = false, updatable = false)},
+            @JoinColumn(name = "user_id", nullable = false, updatable = false)},
             inverseJoinColumns = {
             @JoinColumn(name = "car_id", nullable = false, updatable = false)})
-    private Set<Driver> drivers = new HashSet<>();
+    private Set<User> drivers = new HashSet<>();
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created = new Date(System.currentTimeMillis());
     private byte[] photo;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public Car of(String name, String description, Float body, Engine engine, User user) {
+    public Car of(String name, String description, Float body, Engine engine) {
         Car car = new Car();
         car.name = name;
         car.description = description;
         car.body = body;
         car.engine = engine;
-        car.user = user;
         return car;
     }
 
@@ -92,22 +83,6 @@ public class Car {
         this.photo = photo;
     }
 
-    public Boolean getSold() {
-        return sold;
-    }
-
-    public void setSold(Boolean sold) {
-        this.sold = sold;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
     public Engine getEngine() {
         return engine;
     }
@@ -116,22 +91,13 @@ public class Car {
         this.engine = engine;
     }
 
-    public Set<Driver> getDrivers() {
+    public Set<User> getDrivers() {
         return drivers;
     }
 
-    public void setDrivers(Set<Driver> drivers) {
+    public void setDrivers(Set<User> drivers) {
         this.drivers = drivers;
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
 
     @Override
     public String toString() {

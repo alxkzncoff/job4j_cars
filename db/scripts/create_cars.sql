@@ -4,9 +4,5 @@ CREATE TABLE IF NOT EXISTS cars(
     description TEXT,
     body VARCHAR(50),
     photo BYTEA,
-    sold BOOLEAN,
-    created TIMESTAMP,
-    engine_id INT NOT NULL REFERENCES engines(id),
-    user_id INT NOT NULL REFERENCES users(id)
-
+    engine_id INT NOT NULL REFERENCES engines(id)
 );
