@@ -32,8 +32,6 @@ public class Car {
             @JoinColumn(name = "car_id", nullable = false, updatable = false)})
     private Set<User> drivers = new HashSet<>();
 
-    private byte[] photo;
-
     public Car of(String name, String description, Float body, Engine engine) {
         Car car = new Car();
         car.name = name;
@@ -73,14 +71,6 @@ public class Car {
 
     public void setBody(Float body) {
         this.body = body;
-    }
-
-    public byte[] getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
     }
 
     public Engine getEngine() {
