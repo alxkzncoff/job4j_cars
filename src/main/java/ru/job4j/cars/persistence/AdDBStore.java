@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.job4j.cars.model.Advertisement;
 
 import java.util.List;
 import java.util.function.Function;
@@ -41,7 +42,7 @@ public class AdDBStore {
      * Метод возвращает список объявлений из БД определенной марки.
      * @return Список объявлений.
      */
-    public List findByCarName(String carName) {
+    public List<Advertisement> findByCarName(String carName) {
         return this.tx(
                 session -> session.createQuery("select distinct a from Advertisement a "
                         + "join fetch a.car c "
@@ -57,7 +58,7 @@ public class AdDBStore {
      * Метод возвращает список объявлений из БД за сегодняшний день.
      * @return Список объявлений.
      */
-    public List findToday() {
+    public List<Advertisement> findToday() {
         return this.tx(
                 session -> session.createQuery("select distinct a from Advertisement a "
                         + "join fetch a.car c "
@@ -71,7 +72,7 @@ public class AdDBStore {
      * Метод возвращает список объявлений из БД у которых есть фотография.
      * @return Список объявлений.
      */
-    public List findByPhoto() {
+    public List<Advertisement> findByPhoto() {
         return this.tx(
                 session -> session.createQuery("select distinct a from Advertisement a "
                         + "join fetch a.car c "
