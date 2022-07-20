@@ -1,0 +1,43 @@
+package ru.job4j.cars.persistence;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+
+import java.util.function.Function;
+
+public interface Store {
+
+    default <T> T tx(final Function<Session, T> command, SessionFactory sf, Logger log) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            log.error("HQL Exception", e);
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    default <T> T tx(final Function<Session, T> command, SessionFactory sf) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+}

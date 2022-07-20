@@ -17,6 +17,9 @@ public class Advertisement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String description;
+    private String mileage;
+    private String color;
+    private String price;
     private Boolean sold = false;
     private byte[] photo;
 
@@ -31,9 +34,14 @@ public class Advertisement {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "USER_ID_FK"))
     private User user;
 
-    public Advertisement of(String description) {
+    public static Advertisement of(String description, String price,
+                                   String mileage, String color, Car car) {
         Advertisement ad = new Advertisement();
         ad.description = description;
+        ad.mileage = mileage;
+        ad.color = color;
+        ad.price = price;
+        ad.car = car;
         return ad;
     }
 
@@ -51,6 +59,30 @@ public class Advertisement {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(String mileage) {
+        this.mileage = mileage;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public Boolean getSold() {
@@ -97,6 +129,9 @@ public class Advertisement {
     public String toString() {
         return "Advertisement: id=" + id
                 + ", description='" + description + '\''
+                + ", mileage=" + mileage
+                + ", color=" + color
+                + ", price=" + price
                 + ", sold=" + sold
                 + ", created=" + created;
     }

@@ -4,23 +4,29 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * Класс двигателя автомобиля.
- * @author Alkeksandr Kuznetsov.
+ * Класс модель автомобиля.
+ * @author Aleksandr Kuznetsov.
  * @version 1.0
  */
 @Entity
-@Table(name = "engines")
-public class Engine {
+@Table(name = "models")
+public class Model {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true)
     private String name;
 
-    public static Engine of(String name) {
-        Engine engine = new Engine();
-        engine.name = name;
-        return engine;
+    @OneToOne
+    @JoinColumn(name = "make_id", foreignKey = @ForeignKey(name = "MAKE_ID_FK"))
+    private Make make;
+
+    public static Model of(String name, Make make) {
+        Model m = new Model();
+        m.name = name;
+        m.make = make;
+        return m;
     }
 
     public int getId() {
@@ -39,10 +45,19 @@ public class Engine {
         this.name = name;
     }
 
+    public Make getMake() {
+        return make;
+    }
+
+    public void setMake(Make make) {
+        this.make = make;
+    }
+
     @Override
     public String toString() {
-        return "Engine: id=" + id
-                + ", name=" + name;
+        return "Model: "
+                + "id=" + id
+                + ", name=" + name + "}";
     }
 
     @Override
@@ -53,8 +68,8 @@ public class Engine {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Engine engine = (Engine) o;
-        return id == engine.id && Objects.equals(name, engine.name);
+        Model model = (Model) o;
+        return id == model.id && Objects.equals(name, model.name);
     }
 
     @Override

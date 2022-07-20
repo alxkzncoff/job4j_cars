@@ -17,13 +17,30 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private String description;
-    private Float body;
+
+    @ManyToOne
+    @JoinColumn(name = "make_id", foreignKey = @ForeignKey(name = "MAKE_ID_FK"))
+    private Make make;
+
+    @ManyToOne
+    @JoinColumn(name = "model_id", foreignKey = @ForeignKey(name = "MODEL_ID_FK"))
+    private Model model;
+
+    @ManyToOne
+    @JoinColumn(name = "body_id", foreignKey = @ForeignKey(name = "BODY_ID_FK"))
+    private Body body;
 
     @ManyToOne
     @JoinColumn(name = "engine_id", foreignKey = @ForeignKey(name = "ENGINE_ID_FK"))
     private Engine engine;
+
+    @ManyToOne
+    @JoinColumn(name = "drive_id", foreignKey = @ForeignKey(name = "DRIVE_ID_FK"))
+    private Drive drive;
+
+    @ManyToOne
+    @JoinColumn(name = "transmission_id", foreignKey = @ForeignKey(name = "TRANSMISSION_ID_FK"))
+    private Transmission trans;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "history_owners", joinColumns = {
@@ -32,13 +49,16 @@ public class Car {
             @JoinColumn(name = "car_id", nullable = false, updatable = false)})
     private Set<User> drivers = new HashSet<>();
 
-    public Car of(String name, String description, Float body, Engine engine) {
-        Car car = new Car();
-        car.name = name;
-        car.description = description;
-        car.body = body;
-        car.engine = engine;
-        return car;
+    public static Car of(Make make, Model model, Engine engine,
+                         Body body, Drive drive, Transmission trans) {
+        Car c = new Car();
+        c.make = make;
+        c.model = model;
+        c.engine = engine;
+        c.body = body;
+        c.drive = drive;
+        c.trans = trans;
+        return c;
     }
 
     public int getId() {
@@ -49,27 +69,27 @@ public class Car {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Make getMake() {
+        return make;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMake(Make make) {
+        this.make = make;
     }
 
-    public String getDescription() {
-        return description;
+    public Model getModel() {
+        return model;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setModel(Model model) {
+        this.model = model;
     }
 
-    public Float getBody() {
+    public Body getBody() {
         return body;
     }
 
-    public void setBody(Float body) {
+    public void setBody(Body body) {
         this.body = body;
     }
 
@@ -79,6 +99,22 @@ public class Car {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+    }
+
+    public Drive getDrive() {
+        return drive;
+    }
+
+    public void setDrive(Drive drive) {
+        this.drive = drive;
+    }
+
+    public Transmission getTrans() {
+        return trans;
+    }
+
+    public void setTrans(Transmission trans) {
+        this.trans = trans;
     }
 
     public Set<User> getDrivers() {
@@ -92,9 +128,12 @@ public class Car {
     @Override
     public String toString() {
         return "Car: " + "id=" + id
-                + ", name='" + name + '\''
-                + ", description='" + description + '\''
-                + ", body=" + body;
+                + ", make={" + make + "}"
+                + ", model={" + model + "}"
+                + ", body={" + body + "}"
+                + ", engine={" + engine + "}"
+                + ", drive={" + drive + "}"
+                + ", trans={" + trans + "}";
     }
 
     @Override

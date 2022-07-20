@@ -23,7 +23,7 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created = new Date(System.currentTimeMillis());
 
-    public User of(String name, String phone, String email, String password) {
+    public static User of(String name, String phone, String email, String password) {
         User user = new User();
         user.name = name;
         user.phone = phone;
@@ -90,11 +90,11 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return id == user.id && Objects.equals(email, user.email);
+        return id == user.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(id);
     }
 }

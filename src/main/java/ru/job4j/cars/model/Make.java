@@ -4,23 +4,24 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * Класс двигателя автомобиля.
- * @author Alkeksandr Kuznetsov.
+ * Класс марка автомобиля.
+ * @author Aleksandr Kuznetsov.
  * @version 1.0
  */
 @Entity
-@Table(name = "engines")
-public class Engine {
+@Table(name = "makes")
+public class Make {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true)
     private String name;
 
-    public static Engine of(String name) {
-        Engine engine = new Engine();
-        engine.name = name;
-        return engine;
+    public static Make of(String name) {
+        Make m = new Make();
+        m.name = name;
+        return m;
     }
 
     public int getId() {
@@ -41,8 +42,9 @@ public class Engine {
 
     @Override
     public String toString() {
-        return "Engine: id=" + id
-                + ", name=" + name;
+        return "Make: "
+                + "id=" + id
+                + ", name=" + name + "}";
     }
 
     @Override
@@ -53,8 +55,8 @@ public class Engine {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Engine engine = (Engine) o;
-        return id == engine.id && Objects.equals(name, engine.name);
+        Make make = (Make) o;
+        return id == make.id && Objects.equals(name, make.name);
     }
 
     @Override

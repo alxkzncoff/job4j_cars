@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS advertisements(
     id SERIAL PRIMARY KEY,
-    description VARCHAR(255),
+    description TEXT,
     sold BOOLEAN,
     created TIMESTAMP,
     photo BYTEA,

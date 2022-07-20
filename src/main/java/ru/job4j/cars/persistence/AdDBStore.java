@@ -1,20 +1,17 @@
 package ru.job4j.cars.persistence;
 
 import net.jcip.annotations.ThreadSafe;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Advertisement;
 
 import java.util.List;
-import java.util.function.Function;
 
 @ThreadSafe
 @Repository
-public class AdDBStore {
+public class AdDBStore implements Store {
     private static final Logger LOG = LoggerFactory.getLogger(AdDBStore.class);
     private final SessionFactory sf;
 
@@ -22,35 +19,92 @@ public class AdDBStore {
         this.sf = sf;
     }
 
-    private <T> T tx(final Function<Session, T> command) {
-        final Session session = sf.openSession();
-        final Transaction tx = session.beginTransaction();
-        try {
-            T rsl = command.apply(session);
-            tx.commit();
-            return rsl;
-        } catch (final Exception e) {
-            session.getTransaction().rollback();
-            LOG.error("HQL Exception", e);
-            throw e;
-        } finally {
-            session.close();
-        }
+    /**
+     * Метод добавляет объявление в БД.
+     * @param ad Объявление.
+     * @return Добавленное объявление.
+     */
+    public Advertisement add(Advertisement ad) {
+        tx(
+                session -> session.save(ad),
+                sf,
+                LOG
+        );
+        return ad;
+    }
+
+    /**
+     * Метод меняет статус объявления на "Продано".
+     * @param id Идентификационный номер объявления.
+     */
+    public void makeSold(int id) {
+        tx(
+                session -> session.createQuery("UPDATE Advertisement a "
+                                + "SET a.sold = :newSold WHERE a.id = :aId")
+                        .setParameter("newSold", true)
+                        .setParameter("aId", id)
+                        .executeUpdate(),
+                sf,
+                LOG
+        );
+    }
+
+    /**
+     * Метод обновляет описание объявления в БД.
+     * @param id Идентификационный номер объявления.
+     * @param ad Обновленное объявление.
+     */
+    public void update(int id, Advertisement ad) {
+        tx(
+                session -> session.createQuery("UPDATE Advertisement a "
+                        + "SET a.description = :adDesc, a.price = :adPrice WHERE a.id = :adId")
+                        .setParameter("adDesc", ad.getDescription())
+                        .setParameter("adPrice", ad.getPrice())
+                        .setParameter("adId", id)
+                        .executeUpdate(),
+                sf,
+                LOG
+        );
+    }
+
+    /**
+     * Метод возвращает объявление по id, если оно есть в БД.
+     * @param id Идентификационный номер объявления.
+     * @return Найденное объявление.
+     */
+    public Advertisement findById(int id) {
+        return tx(
+                session -> (Advertisement) session.createQuery("SELECT DISTINCT a FROM Advertisement a "
+                                + "JOIN FETCH a.car c "
+                                + "JOIN FETCH c.model m "
+                                + "JOIN FETCH m.make "
+                                + "JOIN FETCH c.body "
+                                + "JOIN FETCH c.drive "
+                                + "JOIN FETCH c.engine WHERE a.id = :aId")
+                        .setParameter("aId", id)
+                        .uniqueResult(),
+                sf,
+                LOG
+        );
     }
 
     /**
      * Метод возвращает список объявлений из БД определенной марки.
      * @return Список объявлений.
      */
-    public List<Advertisement> findByCarName(String carName) {
-        return this.tx(
-                session -> session.createQuery("select distinct a from Advertisement a "
-                        + "join fetch a.car c "
-                        + "join fetch a.user u "
-                        + "join fetch c.engine e "
-                        + "join fetch c.drivers where c.name = :cName")
-                        .setParameter("cName", carName)
-                        .list()
+    public List<Advertisement> findByMakeName(String name) {
+        return tx(
+                session -> session.createQuery("SELECT DISTINCT a FROM Advertisement a "
+                                + "JOIN FETCH a.car c "
+                                + "JOIN FETCH c.model m "
+                                + "JOIN FETCH m.make mk "
+                                + "JOIN FETCH c.body "
+                                + "JOIN FETCH c.drive "
+                                + "JOIN FETCH c.engine WHERE mk.name = :mkName")
+                        .setParameter("mkName", name)
+                        .list(),
+                sf,
+                LOG
         );
     }
 
@@ -59,12 +113,16 @@ public class AdDBStore {
      * @return Список объявлений.
      */
     public List<Advertisement> findToday() {
-        return this.tx(
-                session -> session.createQuery("select distinct a from Advertisement a "
-                        + "join fetch a.car c "
-                        + "join fetch a.user u "
-                        + "join fetch c.engine e "
-                        + "join fetch c.drivers where a.created > CURRENT_DATE").list()
+        return tx(
+                session -> session.createQuery("SELECT DISTINCT a FROM Advertisement a "
+                        + "JOIN FETCH a.car c "
+                        + "JOIN FETCH c.model m "
+                        + "JOIN FETCH m.make "
+                        + "JOIN FETCH c.body "
+                        + "JOIN FETCH c.drive "
+                        + "JOIN FETCH c.engine WHERE a.created > CURRENT_DATE").list(),
+                sf,
+                LOG
         );
     }
 
@@ -73,12 +131,48 @@ public class AdDBStore {
      * @return Список объявлений.
      */
     public List<Advertisement> findByPhoto() {
-        return this.tx(
-                session -> session.createQuery("select distinct a from Advertisement a "
-                        + "join fetch a.car c "
-                        + "join fetch a.user u "
-                        + "join fetch c.engine e "
-                        + "join fetch c.drivers where a.photo.size > 0").list()
+        return tx(
+                session -> session.createQuery("SELECT DISTINCT a FROM Advertisement a "
+                        + "JOIN FETCH a.car c "
+                        + "JOIN FETCH c.model m "
+                        + "JOIN FETCH m.make "
+                        + "JOIN FETCH c.body "
+                        + "JOIN FETCH c.drive "
+                        + "JOIN FETCH c.engine WHERE a.photo != null ").list(),
+                sf,
+                LOG
+        );
+    }
+
+    /**
+     * Метод возвращает список всех объявлений.
+     * @return Список объявлений.
+     */
+    public List<Advertisement> findAll() {
+        return tx(
+                session -> session.createQuery("SELECT DISTINCT a FROM Advertisement a "
+                        + "JOIN FETCH a.car c "
+                        + "JOIN FETCH c.model m "
+                        + "JOIN FETCH m.make "
+                        + "JOIN FETCH c.body "
+                        + "JOIN FETCH c.drive "
+                        + "JOIN FETCH c.engine ").list(),
+                sf,
+                LOG
+        );
+    }
+
+    /**
+     * Метод удаляет объявление из БД по id.
+     * @param id Идентификационный номер объявления.
+     */
+    public void delete(int id) {
+        tx(
+                session -> session.createQuery("DELETE FROM Advertisement WHERE id = :aId")
+                        .setParameter("aId", id)
+                        .executeUpdate(),
+                sf,
+                LOG
         );
     }
 }

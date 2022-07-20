@@ -15,7 +15,12 @@
         <property name="hbm2ddl.auto">create</property>
 
         <mapping class="ru.job4j.cars.model.Car" />
+        <mapping class="ru.job4j.cars.model.Make" />
+        <mapping class="ru.job4j.cars.model.Model" />
+        <mapping class="ru.job4j.cars.model.Body" />
         <mapping class="ru.job4j.cars.model.Engine" />
+        <mapping class="ru.job4j.cars.model.Drive" />
+        <mapping class="ru.job4j.cars.model.Transmission" />
         <mapping class="ru.job4j.cars.model.Advertisement" />
         <mapping class="ru.job4j.cars.model.User" />
 

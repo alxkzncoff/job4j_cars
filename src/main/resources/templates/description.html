@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <title>Сервис по продаже авто</title>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Сервис по продаже авто</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" th:href="@{/all}">Все объявления</a>
+            </div>
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" th:href="@{/filterToday}">Объявления за сегодня</a>
+            </div>
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" th:href="@{/filterPhoto}">Объявления с фото</a>
+            </div>
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" th:href="@{/filterMakeForm}">Поиск по марке</a>
+            </div>
+            <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">
+                <span th:text="${user.name}"></span>
+                <span> | Войти</span>
+            </a>
+            <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">
+                <span th:text="${user.name}"></span>
+                <span> | Выйти</span>
+            </a>
+        </div>
+    </nav>
+    <div class="row pt-3">
+        <div class="card" style="width: 100%" >
+            <div class="card-header">
+                Подробная информация.
+            </div>
+            <table class="table">
+                <tbody>
+                <tr th:if="${ad.photo != null}">
+                    <th scope="row">Фото:</th>
+                    <td>
+                        <img th:width="350" th:high="270" th:src="@{|/photoAd/${ad.id}|}">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Марка:</th>
+                    <td th:text="${ad.car.model.make.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Модель:</th>
+                    <td th:text="${ad.car.model.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Цвет:</th>
+                    <td th:text="${ad.color}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Двигатель:</th>
+                    <td th:text="${ad.car.engine.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Пробег:</th>
+                    <td th:text="${ad.mileage}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Тип кузова:</th>
+                    <td th:text="${ad.car.body.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Тип привода:</th>
+                    <td th:text="${ad.car.drive.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Коробка:</th>
+                    <td th:text="${ad.car.trans.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Цена:</th>
+                    <td th:text="${ad.price}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Дата размещения:</th>
+                    <td th:text="${ad.created}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Продавец:</th>
+                    <td th:text="${ad.user.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Статус:</th>
+                    <td class="table-success" th:if="${ad.sold}">Продано</td>
+                    <td class="table-info" th:if="${!ad.sold}">Продается</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row pt-3">
+        <div class="btn-toolbar pull-right" th:if="${ad.user.id == user.id}">
+            <form th:action="@{|/makeSold/${ad.id}|}" method="POST">
+                <button th:if="${!ad.sold}" type="submit" class="btn btn-success mr-1">Продано</button>
+            </form>
+            <a th:if="${!ad.sold}" class="btn btn-primary mr-1" th:href="@{|/edit/${ad.id}|}" role="button">Редактировать описание</a>
+            <form th:action="@{|/delete/${ad.id}|}" method="POST">
+                <button type="submit" class="btn btn-danger mr-1">Снять объявление</button>
+            </form>
+        </div>
+    </div>
+    <div class="row pt-3">
+        <div>
+            <h4>Комментарий продавца</h4>
+            <p th:text="${ad.description}"></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
