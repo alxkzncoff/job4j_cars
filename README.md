@@ -1,9 +1,10 @@
-# Площадка по продаже автомобилей.
+# Проект - "Сервис по продаже автомобилей"
 
-Проект разработан с целью улучшения навыков работы с различными стеками технологий.
+Проект разработан с целью улучшения навыков работы с различными стеками технологий 
+и представляет собой веб сервис по продаже автомобилей.
 При необходимости функционал проекта можно расширить.
 
-Площадка состоит из объявлений. В объявлениях содержится:
+Сервис представляет собой список объявлений. В объявлениях содержится:
 
 - Описание;
 - Марка автомобиля;
@@ -17,6 +18,36 @@
 
 Объявления имеют статус продано или нет. Сменить статус объявления и отредактировать детали может
 только пользователь, который разместил конкретное объявление.
+
+## Запуск проекта
+
+Для корректной работы приложения необходимо установить следующие программы:
+
+- Java 17 или выше;
+- PostgreSQL 14 или выше;
+- Apache Maven 3.8.3 или выше.
+
+1. Настройка postgreSQL. В терминале набрать следующие команды:
+
+- Ввести логин. Вместо username указать свой;
+```bash
+  psql --username <username>
+```
+- Ввести пароль;
+- Создать базу данных.
+```bash
+  create database car;
+```
+
+2. Запуск при помощи maven. В терминале набрать следующие команды:
+```
+  mvn spring-boot:run
+```
+
+При необходимости запустить liquibase для создания таблиц в БД.
+```
+  mvn liquibase:update
+```
 
 ## Пример функционирования площадки.
 
@@ -66,8 +97,9 @@
   <img src="docs/add_5.jpg">
 </details>
 
-[![java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)](https://www.java.com/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)](https://spring.io/projects/spring-boot)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
-[![PostgresSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)](https://hibernate.org/)
+## Технологии
+
+[![java](https://img.shields.io/badge/java-17-red)](https://www.java.com/)
+[![maven](https://img.shields.io/badge/apache--maven-3.8.3-blue)](https://maven.apache.org/)
+[![Spring Boot](https://img.shields.io/badge/spring%20boot-2.7.3-brightgreen)](https://spring.io/projects/spring-boot)
+[![PostgresSQL](https://img.shields.io/badge/postgreSQL-14-blue)](https://www.postgresql.org/)
