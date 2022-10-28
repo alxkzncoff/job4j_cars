@@ -23,7 +23,7 @@
 
 Для корректной работы приложения необходимо установить следующие программы:
 
-- Java 17 или выше;
+- Java 16 или выше;
 - PostgreSQL 14 или выше;
 - Apache Maven 3.8.3 или выше.
 
@@ -99,7 +99,7 @@
 
 ## Технологии
 
-[![java](https://img.shields.io/badge/java-17-red)](https://www.java.com/)
+[![java](https://img.shields.io/badge/java-16-red)](https://www.java.com/)
 [![maven](https://img.shields.io/badge/apache--maven-3.8.3-blue)](https://maven.apache.org/)
 [![Spring Boot](https://img.shields.io/badge/spring%20boot-2.7.3-brightgreen)](https://spring.io/projects/spring-boot)
 [![PostgresSQL](https://img.shields.io/badge/postgreSQL-14-blue)](https://www.postgresql.org/)
